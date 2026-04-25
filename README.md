@@ -1,8 +1,8 @@
 # text-analyzer
 
-Paste in a block of text, get back a short summary and 3 action items as JSON.
+Takes in a block of text and returns a short summary and 3 action items as JSON.
 
-Built on Claude's tool use API so the output shape is enforced at the API level, not just asked for politely in a prompt. Full prompt breakdown and AI workflow notes are in [`prompt-workflow.md`](./prompt-workflow.md).
+Built using @anthropic-ai/sdk to enforce output shape is enforced at the API level. Full prompt breakdown and AI workflow notes are in [`prompt-workflow.md`](./prompt-workflow.md).
 
 ---
 
@@ -18,7 +18,7 @@ Built on Claude's tool use API so the output shape is enforced at the API level,
 
 ## What I built
 
-A `POST /analyze` API and the `analyze()` function behind it. Send text in, get structured JSON back:
+A `POST /analyze` API and the `analyze()` function behind it. It accepts text input, and returns structured JSON:
 
 ```json
 {
@@ -47,7 +47,7 @@ What's in the repo:
 **System prompt** (`src/prompts.ts`):
 
 - Tells the model how to pick the top 3 actions when there are more than 3 options: things blocking other people come first, then deadlines, then anything that can't be undone, then quick wins. Without this it just picks whatever was mentioned most recently.
-- Adjusts behavior based on what kind of text it's reading: bug reports should produce repro steps, meeting transcripts should skip past-tense events that already happened, documents with no named people should have null owners.
+- Adjusts behavior based on what kind of text it's reading: bug reports should produce reproduction steps, meeting transcripts should skip past-tense events that already happened, documents with no named people should have null owners.
 - Doesn't tell the model what format to return - that's handled by the tool definition (see below).
 
 **User prompt** (`src/analyze.ts`):
@@ -167,4 +167,4 @@ Bruno is an API client (like Postman). `api-documentation/` has everything you n
 - `openapi.yml` - the full API spec. Import via Open Collection > Import > OpenAPI V3.
 - `bruno/` - 7 ready-to-run requests with pass/fail assertions. Open this folder directly in Bruno.
 
-Start the server first (`npm run server`), then run individual requests or hit Run Collection to run all 7 at once.
+Start the server first (`npm run server`), then run requests via curl or an API client.
