@@ -50,7 +50,7 @@ What's in the repo:
 - Adjusts behavior based on what kind of text it's reading: bug reports should produce reproduction steps, meeting transcripts should skip past-tense events that already happened, documents with no named people should have null owners.
 - Doesn't tell the model what format to return, instead that's handled by the tool definition (see [`src/analyze.ts`](src/analyze.ts)).
 
-**User prompt** ([`src/server.ts`](src/server.ts)):
+**User prompt** ([`src/analyze.ts`](src/analyze.ts)):
 
 - Wraps the input in a random tag per call to mitigate prompt injection.
 
