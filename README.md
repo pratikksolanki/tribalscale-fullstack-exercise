@@ -69,10 +69,10 @@ What's in the repo:
 
 ## What I would improve with more time
 
-- **Prompt caching** - the system prompt never changes, so paying to send it on every request is wasteful. Caching it would cut costs by around 90%.
-- **Streaming** - right now nothing prints until the full response comes back. Streaming would make it feel much faster.
+- **Prompt caching** - the system prompt never changes, so paying to send it on every request is wasteful. Caching it would cut costs.
+- **Streaming** - right now nothing prints until the full response comes back. Streaming would make responses feel much faster.
 - **One prompt per input type** - the current prompt handles bug reports, transcripts, and documents all in one. Splitting them out would make each easier to tune.
-- **Auto-retry** - if Claude returns something that doesn't match the expected shape (rare but possible), sending a follow-up to fix it would handle it gracefully instead of throwing.
+- **Auto-retry** - if Claude returns something that doesn't match the expected shape (rare but possible), sending a follow-up to fix it would handle it gracefully instead of throwing errors.
 
 ---
 
