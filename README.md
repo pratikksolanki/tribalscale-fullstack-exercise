@@ -58,11 +58,11 @@ What's in the repo:
 
 ## What didn't work at first and how I adjusted
 
-**Asking the model to return JSON didn't work reliably.** Claude Haiku kept wrapping the output in code blocks even when told not to. I wrote a parser with three fallback strategies to strip the fences and extract the JSON. It worked, but it was the wrong fix. Switched to Claude's tool use feature instead, which forces the model to return a specific structure rather than just asking it nicely. Deleted all the parsing code.
+**Asking the model to return JSON didn't work reliably.** Claude Haiku kept wrapping the output in code blocks even when told not to. I wrote a parser with three fallback strategies to strip the fences and extract the JSON. It worked, but it was the wrong fix. Switched to Claude's tool use feature instead, which forces the model to return a result in the specifically formatted output structure. Deleted all the initial parsing code.
 
-**Priorities were all over the place.** Just saying "give me the 3 most important actions" meant the model picked whatever sounded most urgent in the text, not what was actually most important. Added explicit ranking rules and it became consistent.
+**Priorities were all over the place.** Just saying "give me the 3 most important actions" meant the model picked whatever sounded most urgent in the text, not what was actually most important. Added explicit ranking rules in the system prompt which consistently resulted in expected output.
 
-**The `owner` field sometimes came back as the text `"null"` instead of an actual null value.** Small but annoying. Added a line to the prompt and the tool schema to clarify the difference. Fixed immediately.
+**The `owner` field sometimes came back as the text `"null"` instead of an actual null value.** This was fixed by adding a line to the prompt and the tool schema to clarify the difference. The issue was fixed immediately.
 
 
 ---
