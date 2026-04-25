@@ -34,23 +34,23 @@ A `POST /analyze` API and the `analyze()` function behind it. It accepts text in
 What's in the repo:
 
 - [`src/analyze.ts`](src/analyze.ts) - the main function. Calls Claude once, validates the response shape before returning.
-- `src/server.ts` - Express server with a single `POST /analyze` route.
-- `src/cli.ts` - run it from the terminal. Reads a file or stdin, prints JSON.
-- `api-documentation/openapi.yml` - full API spec.
-- `api-documentation/bruno/` - 7 ready-to-run requests in Bruno (an API client like Postman).
+- [`src/server.ts`](src/server.ts) - Express server with a single `POST /analyze` route.
+- [`src/cli.ts`](src/cli.ts) - run it from the terminal. Reads a file or stdin, prints JSON.
+- [`api-documentation/openapi.yml`](api-documentation/openapi.yml) - full API spec.
+- [`api-documentation/bruno/`](api-documentation/bruno/) - 7 ready-to-run requests in Bruno (an API client like Postman).
 - 4 unit tests + a smoke-test runner against 7 real-world example inputs.
 
 ---
 
 ## The prompts I used
 
-**System prompt** (`src/prompts.ts`):
+**System prompt** ([`src/server.ts`](src/server.ts)):
 
 - Tells the model how to pick the top 3 actions when there are more than 3 options: things blocking other people come first, then deadlines, then anything that can't be undone, then quick wins. Without this it just picks whatever was mentioned most recently.
 - Adjusts behavior based on what kind of text it's reading: bug reports should produce reproduction steps, meeting transcripts should skip past-tense events that already happened, documents with no named people should have null owners.
 - Doesn't tell the model what format to return - that's handled by the tool definition (see below).
 
-**User prompt** (`src/analyze.ts`):
+**User prompt** ([`src/server.ts`](src/server.ts)):
 
 - Wraps the input in a random tag per call to mitigate prompt injection.
 
