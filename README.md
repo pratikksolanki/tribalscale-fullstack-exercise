@@ -33,7 +33,7 @@ A `POST /analyze` API and the `analyze()` function behind it. It accepts text in
 
 What's in the repo:
 
-- `src/analyze.ts` - the main function. Calls Claude once, validates the response shape before returning.
+- [`src/analyze.ts`](src/analyze.ts) - the main function. Calls Claude once, validates the response shape before returning.
 - `src/server.ts` - Express server with a single `POST /analyze` route.
 - `src/cli.ts` - run it from the terminal. Reads a file or stdin, prints JSON.
 - `api-documentation/openapi.yml` - full API spec.
