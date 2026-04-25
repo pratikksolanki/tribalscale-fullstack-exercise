@@ -1,0 +1,23 @@
+meta {
+  name: Fixture - Standup Transcript
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/analyze
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "text": "Priya: blocked on Marco confirming whether we deprecate the legacy /session endpoint — changes the whole auth flow. Marco: yes, hard deprecate, writing it up today. Dana: CSV import fix is out at 10%, dashboards clean. Starting empty-state work but blocked until Ravi's /usage endpoint lands. Ravi: /usage is 80% done, ready for review tomorrow, needs load test. Jordan: auth revamp PR has been in review 6 days, ACME demo is tomorrow at 2pm with legal on the call — if it doesn't merge today we're showing screenshots."
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.summary: isDefined
+  res.body.action_items: isDefined
+}

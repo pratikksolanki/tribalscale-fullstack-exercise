@@ -1,0 +1,22 @@
+meta {
+  name: Error - Empty Text
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:3000/analyze
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "text": ""
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.error: isDefined
+}

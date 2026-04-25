@@ -1,0 +1,32 @@
+{
+  "name": "text-analyzer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Summarize text and extract action items via the Anthropic AI SDK",
+  "type": "module",
+  "exports": {
+    ".": "./src/analyze.ts"
+  },
+  "scripts": {
+    "start": "tsx --env-file-if-exists=.env src/cli.ts",
+    "server": "tsx --env-file-if-exists=.env src/server.ts",
+    "analyze": "tsx --env-file-if-exists=.env src/cli.ts",
+    "test-all": "tsx --env-file-if-exists=.env scripts/test-all.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.91.0",
+    "express": "^5.2.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Model Override (Sonnet)
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/analyze
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "text": "Quarterly review: revenue is down 12%, churn increased to 8%. We need to schedule a leadership meeting, revise the pricing strategy, and reach out to churned customers for feedback.",
+    "model": "claude-sonnet-4-6"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.summary: isDefined
+  res.body.action_items: isDefined
+}

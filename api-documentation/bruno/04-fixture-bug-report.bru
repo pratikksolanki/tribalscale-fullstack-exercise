@@ -1,0 +1,23 @@
+meta {
+  name: Fixture - Bug Report
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/analyze
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "text": "App freezes and tab dies when uploading PDFs over ~10MB on Safari. Steps to repro: log in, go to Documents > Upload, select any PDF over 10MB, click Upload. Tab freezes for ~30s then goes white. Zero error messages shown. Happens every time. Other browsers fine. Upload endpoint is POST /api/documents/upload. No Sentry errors captured."
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.summary: isDefined
+  res.body.action_items: isDefined
+}

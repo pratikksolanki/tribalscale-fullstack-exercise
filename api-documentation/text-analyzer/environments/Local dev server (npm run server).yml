@@ -1,0 +1,4 @@
+name: Local dev server (npm run server)
+variables:
+  - name: baseUrl
+    value: http://localhost:3000

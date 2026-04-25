@@ -1,0 +1,22 @@
+meta {
+  name: Error - Missing Text Field
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:3000/analyze
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "model": "claude-haiku-4-5-20251001"
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.error: isDefined
+}

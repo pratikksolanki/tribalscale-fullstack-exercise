@@ -1,0 +1,175 @@
+openapi: 3.0.3
+
+info:
+  title: text-analyzer
+  description: Summarize text and extract 3 prioritized action items via the Anthropic Claude API.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Local dev server (npm run server)
+
+paths:
+  /analyze:
+    post:
+      summary: Analyze text
+      description: >
+        Takes a block of text, calls the Anthropic Claude API using tool use,
+        and returns a structured JSON object with a short summary and exactly
+        3 prioritized action items.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyzeRequest'
+            examples:
+              basic:
+                summary: Basic call
+                value:
+                  text: >
+                    We need to fix the login bug before Friday. John will handle
+                    the backend patch and Sarah will update the tests. We also
+                    need to notify customers about the downtime window.
+              model-override:
+                summary: Override model to Sonnet
+                value:
+                  text: >
+                    Quarterly review: revenue is down 12%, churn increased to 8%.
+                    We need to schedule a leadership meeting, revise the pricing
+                    strategy, and reach out to churned customers for feedback.
+                  model: claude-sonnet-4-6
+              standup:
+                summary: Standup transcript
+                value:
+                  text: >
+                    Priya: blocked on Marco confirming whether we deprecate the
+                    legacy /session endpoint — changes the whole auth flow.
+                    Marco: yes, hard deprecate, writing it up today.
+                    Dana: CSV import fix is out at 10%, dashboards clean. Starting
+                    empty-state work but blocked until Ravi's /usage endpoint lands.
+                    Ravi: /usage is 80% done, ready for review tomorrow, needs load test.
+                    Jordan: auth revamp PR has been in review 6 days, ACME demo is
+                    tomorrow at 2pm with legal — if it doesn't merge today we're
+                    showing screenshots.
+              bug-report:
+                summary: Bug report
+                value:
+                  text: >
+                    App freezes and tab dies when uploading PDFs over ~10MB on Safari.
+                    Steps to repro: log in, go to Documents > Upload, select any PDF
+                    over 10MB, click Upload. Tab freezes for ~30s then goes white.
+                    Zero error messages shown. Happens every time. Other browsers fine.
+                    Upload endpoint is POST /api/documents/upload. No Sentry errors captured.
+      responses:
+        '200':
+          description: Successful analysis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analysis'
+              example:
+                summary: The team needs to resolve a blocking auth PR before an ACME demo tomorrow, address a double-billing issue affecting 40 enterprise tenants, and file a ticket for a magic-link bug causing silent drop-offs on iOS.
+                action_items:
+                  - task: Merge the auth revamp PR before the ACME demo at 2pm tomorrow
+                    owner: karan
+                    priority: high
+                  - task: Write and run a refund script for the 40 double-billed enterprise tenants
+                    owner: ravi
+                    priority: high
+                  - task: File a bug ticket for the expired magic-link blank screen on iOS 14.x
+                    owner: dana
+                    priority: medium
+        '400':
+          description: Invalid request (missing or empty text, malformed JSON)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                empty-text:
+                  summary: Empty text field
+                  value:
+                    error: text is required and must be a non-empty string
+                malformed-json:
+                  summary: Malformed JSON body
+                  value:
+                    error: "Unexpected token b in JSON at position 1"
+        '500':
+          description: Analysis failed (API error or schema validation failure)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: analysis failed - check server logs
+
+components:
+  schemas:
+    AnalyzeRequest:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          minLength: 1
+          description: The block of text to analyze.
+          example: "We need to fix the login bug before Friday..."
+        model:
+          type: string
+          description: Claude model ID to use. Defaults to claude-haiku-4-5-20251001.
+          example: claude-sonnet-4-6
+          enum:
+            - claude-haiku-4-5-20251001
+            - claude-haiku-3-5-20241022
+            - claude-sonnet-4-5-20251001
+            - claude-sonnet-4-6
+            - claude-opus-4-7
+
+    ActionItem:
+      type: object
+      required:
+        - task
+        - owner
+        - priority
+      properties:
+        task:
+          type: string
+          description: Short imperative sentence describing the action.
+          example: Merge the auth revamp PR before the ACME demo
+        owner:
+          type: string
+          nullable: true
+          description: Person or role responsible, or null if unassigned.
+          example: karan
+        priority:
+          type: string
+          enum:
+            - high
+            - medium
+            - low
+
+    Analysis:
+      type: object
+      required:
+        - summary
+        - action_items
+      properties:
+        summary:
+          type: string
+          description: 1-3 sentence summary of the core message.
+        action_items:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/ActionItem'
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string

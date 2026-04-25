@@ -1,0 +1,10 @@
+node_modules/
+dist/
+
+# Secrets: ignore every .env* variant, but keep the template checked in.
+.env
+.env.*
+!.env.example
+
+*.log
+.DS_Store

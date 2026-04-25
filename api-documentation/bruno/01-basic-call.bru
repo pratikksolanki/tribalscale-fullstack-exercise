@@ -1,0 +1,23 @@
+meta {
+  name: Basic Call
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/analyze
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "text": "We need to fix the login bug before Friday. John will handle the backend patch and Sarah will update the tests. We also need to notify customers about the downtime window."
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.summary: isDefined
+  res.body.action_items: isDefined
+}
