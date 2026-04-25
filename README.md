@@ -44,7 +44,7 @@ What's in the repo:
 
 ## The prompts I used
 
-**System prompt** ([`src/prompt.ts`](src/prompt.ts)):
+**System prompt** ([`src/prompts.ts`](src/prompts.ts)):
 
 - Tells the model how to pick the top 3 actions when there are more than 3 options: things blocking other people come first, then deadlines, then anything that can't be undone, then quick wins. Without this it just picks whatever was mentioned most recently.
 - Adjusts behavior based on what kind of text it's reading: bug reports should produce reproduction steps, meeting transcripts should skip past-tense events that already happened, documents with no named people should have null owners.
